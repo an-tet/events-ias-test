@@ -15,6 +15,20 @@ Put this environment variables in the execution configuration of your project, w
 - DATABASE_PASSWORD=
 - APPLICATION_PORT=
 
+## Docker
+
+After you set all the environment variables you can run the container with docker compose 
+
+```shell
+docker compose up -d
+``` 
+
+or podman compose
+
+```shell
+podman compose up -d
+```
+
 ### Reference Documentation
 For further reference, please consider the following sections:
 
