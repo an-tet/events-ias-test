@@ -1,0 +1,29 @@
+version: '3'
+
+services:
+  db:
+    image: postgres
+    restart: always
+    container_name: ${DATABASE_NAME}
+    ports:
+      - '${DATABASE_EXPOSED_PORT}:${DATABASE_CONTAINER_PORT}'
+    environment:
+      POSTGRES_DB: ${DATABASE_NAME}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_USER: ${DATABASE_USERNAME}
+    volumes:
+      - ./docker_postgres_seed.sql:/docker-entrypoint-initdb.d/docker_postgres_seed.sql
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: ${PGADMIN_NAME}
+    restart: always
+    ports:
+      - '${PGADMIN_EXPOSED_PORT}:${PGADMIN_CONTAINER_PORT}'
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+volumes:
+  postgres-data:
+  pgadmin-data:

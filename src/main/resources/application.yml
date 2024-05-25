@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: events
+  r2dbc:
+    url: ${URL_APPLICATION_DATA_SOURCE}
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
+
+server:
+  port: ${APPLICATION_PORT}
+
+logging:
+  level:
+    io.r2dbc.postgresql: DEBUG
