@@ -1,29 +1,37 @@
-package com.ias.events.infrastructure.entrypoints.controllers;
+package com.ias.events.infrastructure.entrypoints.routers;
 
 import com.ias.events.application.constants.ErrorMessageConstants;
-import com.ias.events.application.constants.RoutesConstants;
 import com.ias.events.domain.models.EventModel;
 import com.ias.events.domain.usecases.repositories.EventUseCaseRepository;
 import com.ias.events.infrastructure.entrypoints.dtos.EventDto;
+import com.ias.events.infrastructure.entrypoints.handlers.Handler;
 import com.ias.events.infrastructure.entrypoints.mappers.EventMapper;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
-import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
 
-import java.util.List;
+import static com.ias.events.application.constants.RoutesConstants.EVENT_PATH;
+import static org.springframework.web.reactive.function.server.RouterFunctions.route;
 
-@RestController
-@AllArgsConstructor
-@RequestMapping(RoutesConstants.EVENT_PATH)
+@Configuration
 public class EventController {
     private EventMapper eventMapper;
     private EventUseCaseRepository useCaseRepository;
 
-    @GetMapping()
-    public Mono<List<EventDto>> findAllEvents() {
-        return useCaseRepository.findAllEvents()
+    @Bean
+    public Mono<ServerResponse> routerFunction(Handler handler) {
+        return route()
+                .GET(EVENT_PATH, handler.eventRest::findAllEvents)
+                .build();
+
+        useCaseRepository.findAllEvents()
                 .map(eventMapper::eventModelToDto)
                 .collectList();
     }
